@@ -3,8 +3,8 @@ import numpy as np
 import streamlit as st
 from camera_input_live import camera_input_live
 
-"# Streamlit camera input live Demo"
-"## Try holding a qr code in front of your webcam"
+"# Detección de objetos"
+"### Mantén la cámara fija en el objeto a detectar"
 
 image = camera_input_live()
 
@@ -24,7 +24,7 @@ if image is not None:
     objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=3, minSize=(30, 30))
 
     if len(objects) > 0:
-        st.write("# Found object(s)")
+        st.write("# Objeto detectado")
         
         for (x, y, w, h) in objects:
             # Dibujar cuadro alrededor del objeto
@@ -35,4 +35,4 @@ if image is not None:
 
         st.image(cv2_img)
     else:
-        st.write("No object found in the image.")
+        st.write("Aún no se encuentra ningún objeto.")
