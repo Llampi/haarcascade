@@ -11,7 +11,7 @@ mp_pose = mp.solutions.pose
 # Para imágenes estáticas:
 IMAGE_FILES = []
 BG_COLOR = (192, 192, 192)  # gray
-img_file_buffer = st.camera_input("Take a picture")
+img_file_buffer = st.sidebar.file_uploader("Upload a Video", type=['mp4', 'mov', 'avi', 'asf', 'm4v'])
 
 import math
 
@@ -93,9 +93,9 @@ with mp_pose.Pose(
 # ...
 
 # Para la entrada de la cámara web:
-#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(0)
 #cap = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
-cap = st.image(img_file_buffer)
+#cap = st.image(img_file_buffer)
 contador = 0
 sentadilla = False
 with mp_pose.Pose(
