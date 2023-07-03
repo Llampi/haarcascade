@@ -3,21 +3,26 @@ import pandas as pd
 import cv2
 import mediapipe as mp
 import numpy as np
-from webcam import webcam
+from camera_input_live import camera_input_live
 
-st.title("Webcam capture component")
+"# Streamlit camera input live Demo"
+"## Try holding a qr code in front of your webcam"
 
-st.write("""
-- Accesses the user's webcam and displays the video feed in the browser.
-- Click the "Capture Frame" button to grab the current video frame and
-return it to Streamlit.
-""")
-captured_image = webcam()
-if captured_image is None:
-    st.write("Waiting for capture...")
-else:
-    st.write("Got an image from the webcam:")
-    st.image(captured_image)
+image = camera_input_live()
 
+if image is not None:
+    st.image(image)
+    bytes_data = image.getvalue()
+    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
 
+    detector = cv2.QRCodeDetector()
+
+    data, bbox, straight_qrcode = detector.detectAndDecode(cv2_img)
+
+    if data:
+        st.write("# Found QR code")
+        st.write(data)
+        with st.expander("Show details"):
+            st.write("BBox:", bbox)
+            st.write("Straight QR code:", straight_qrcode)
 
