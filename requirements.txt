@@ -2,5 +2,4 @@ opencv-python-headless
 streamlit
 mediapipe
 numpy
-webcam-streamer
-webcam
+streamlit-camera-input-live
