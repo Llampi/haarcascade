@@ -3,3 +3,4 @@ streamlit
 mediapipe
 numpy
 webcam-streamer
+webcam
