@@ -94,7 +94,8 @@ with mp_pose.Pose(
 
 # Para la entrada de la cámara web:
 #cap = cv2.VideoCapture(0)
-cap = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+#cap = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+cap = st.image(img_file_buffer)
 contador = 0
 sentadilla = False
 with mp_pose.Pose(
