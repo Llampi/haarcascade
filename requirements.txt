@@ -1,5 +1,5 @@
 opencv-python-headless
-opencv-python
+
 streamlit
 mediapipe
 numpy
