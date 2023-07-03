@@ -1,53 +1,38 @@
 import cv2
 import numpy as np
-import imutils
-import os
+import streamlit as st
+from camera_input_live import camera_input_live
 
-carpeta_positivos = 'p'
-carpeta_negativos = 'n'
+"# Detección de objetos"
+"### Mantén la cámara fija en el objeto a detectar"
 
-if not os.path.exists(carpeta_positivos):
-    print('Carpeta creada: ', carpeta_positivos)
-    os.makedirs(carpeta_positivos)
+image = camera_input_live()
 
-if not os.path.exists(carpeta_negativos):
-    print('Carpeta creada: ', carpeta_negativos)
-    os.makedirs(carpeta_negativos)
+if image is not None:
+    st.image(image)
+    bytes_data = image.getvalue()
+    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
 
-cap = cv2.VideoCapture(0, cv2.CAP_ANY)
+    # Cargar el archivo haarcascade.xml
+    cascade_path = "cascade.xml"
+    face_cascade = cv2.CascadeClassifier(cascade_path)
 
-x1, y1 = 190, 80
-x2, y2 = 510, 400
+    # Convertir la imagen a escala de grises
+    gray_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)
 
-count_positivos = len(os.listdir(carpeta_positivos))
-count_negativos = len(os.listdir(carpeta_negativos))
+    # Detectar objetos usando el clasificador de cascada
+    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=1, minSize=(250, 250))
 
-while True:
-    ret, frame = cap.read()
-    if ret == False:
-        break
-    imAux = frame.copy()
-    cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 0, 0), 2)
+    if len(objects) > 0:
+        st.write("# Objeto detectado")
+        
+        for (x, y, w, h) in objects:
+            # Dibujar cuadro alrededor del objeto
+            cv2.rectangle(cv2_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
 
-    objeto = imAux[y1:y2, x1:x2]
-    objeto = imutils.resize(objeto, width=38)
-    # print(objeto.shape)
+        with st.expander("Show details"):
+            st.write("Object(s) detected:", len(objects))
 
-    k = cv2.waitKey(1)
-    if k == ord('p'):
-        cv2.imwrite(carpeta_positivos+'/objeto_{}.jpg'.format(count_positivos), objeto)
-        print('Imagen almacenada en carpeta positivos: ', 'objeto_{}.jpg'.format(count_positivos))
-        count_positivos += 1
-    if k == ord('n'):
-        cv2.imwrite(carpeta_negativos+'/objeto_{}.jpg'.format(count_negativos), objeto)
-        print('Imagen almacenada en carpeta negativos: ', 'objeto_{}.jpg'.format(count_negativos))
-        count_negativos += 1
-    if k == 27:
-        break
-
-    cv2.imshow('frame', frame)
-    cv2.imshow('objeto', objeto)
-
-cap.release()
-cv2.destroyAllWindows()
-
+        st.image(cv2_img)
+    else:
+        st.write("Aún no se encuentra ningún objeto.")
