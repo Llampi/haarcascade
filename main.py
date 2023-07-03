@@ -13,39 +13,26 @@ if image is not None:
     bytes_data = image.getvalue()
     cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
 
-    detector = cv2.QRCodeDetector()
+    # Cargar el archivo haarcascade.xml
+    cascade_path = "haarcascade.xml"
+    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
 
-    data, bbox, straight_qrcode = detector.detectAndDecode(cv2_img)
+    # Convertir la imagen a escala de grises
+    gray_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)
 
-    if data:
-        st.write("# Found QR code")
-        st.write(data)
+    # Detectar objetos usando el clasificador de cascada
+    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+
+    if len(objects) > 0:
+        st.write("# Found object(s)")
+        
+        for (x, y, w, h) in objects:
+            # Dibujar cuadro alrededor del objeto
+            cv2.rectangle(cv2_img, (x, y), (x+w, y+h), (255, 0, 0), 2)
+
         with st.expander("Show details"):
-            st.write("BBox:", bbox)
-            st.write("Straight QR code:", straight_qrcode)
+            st.write("Object(s) detected:", len(objects))
 
-cap = cv2.VideoCapture(0, cv2.CAP_ANY)
-majinBooClassif = cv2.CascadeClassifier('haarcascade_frontalface_alt.xml')
-
-while True:
-    ret, frame = cap.read()
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-
-    toy = majinBooClassif.detectMultiScale(
-        gray,
-        scaleFactor=10,
-        minNeighbors=1,
-        minSize=(75, 75)
-    )
-
-    for (x, y, w, h) in toy:
-        cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        cv2.putText(frame, 'Se detecto un feo', (x, y - 10), 2, 0.7, (0, 255, 0), 2, cv2.LINE_AA)
-
-    cv2.imshow('frame', frame)
-
-    if cv2.waitKey(1) == 27:
-        break
-
-cap.release()
-cv2.destroyAllWindows()
+        st.image(cv2_img)
+    else:
+        st.write("No object found in the image.")
