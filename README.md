@@ -10,3 +10,7 @@
 ### Detección de abjetos
 - El archivo principal es `main.py`
 
+
+#### Enlace a la aplicación en streamlit:
+
+- https://haarcascade-3mbstvg0208.streamlit.app/
