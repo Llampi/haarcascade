@@ -14,13 +14,13 @@ if image is not None:
 
     # Cargar el archivo haarcascade.xml
     cascade_path = 'haarcascade_frontalface_alt.xml'
-    face_cascade = cv2.CascadeClassifier('cascade_path')
+    face_cascade = cv2.CascadeClassifier(cascade_path)
 
     # Convertir la imagen a escala de grises
     gray_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)
 
     # Detectar objetos usando el clasificador de cascada
-    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1, minNeighbors=2, minSize=(10, 10))
 
     if len(objects) > 0:
         st.write("### Objetos encontrados ")
