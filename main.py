@@ -3,6 +3,7 @@ import pandas as pd
 import cv2
 import mediapipe as mp
 import numpy as np
+from streamlit_webrtc import VideoProcessorBase, RTCConfiguration,WebRtcMode,webrtc_streamer
 RTC_CONFIGURATION = RTCConfiguration(
     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}
 )
