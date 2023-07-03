@@ -20,7 +20,7 @@ if image is not None:
     gray_img = cv2.cvtColor(cv2_img, cv2.COLOR_BGR2GRAY)
 
     # Detectar objetos usando el clasificador de cascada
-    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1, minNeighbors=5, minSize=(50, 50))
+    objects = face_cascade.detectMultiScale(gray_img, scaleFactor=1, minNeighbors=5, minSize=(20, 20))
 
     if len(objects) > 0:
         st.write("### Objetos encontrados ")
