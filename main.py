@@ -16,6 +16,5 @@ while run:
 else:
     st.write('Stopped')
 
-cap.release()
-cv2.destroyAllWindows()
+
 
